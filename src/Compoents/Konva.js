@@ -22,11 +22,15 @@ const ThemedRect = ({ data }) => {
     />
   );
 };
-const URLImage = ({ image }) => {
+const URLImage = ({ image, stageZoom }) => {
   return (
     <Img
       style={{ zIndex: -1 }}
       image={image}
+      scaleX={stageZoom.stageScale}
+      scaleY={stageZoom.stageScale}
+      x={stageZoom.stageX}
+      y={stageZoom.stageY}
 
       // I will use offset to set origin to the center of the image
     />
@@ -40,12 +44,15 @@ export const Canvas = ({ outerDivRef }) => {
   const stage = useRef();
   const dispatch = useDispatch();
   const [rect, setRect] = React.useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [stageZoom, setStageZoom] = React.useState({});
   const mouseDown = (e) => {
+    debugger;
     a = true;
+    let pos = getRelativePointerPosition(e);
     setRect({
       ...rect,
-      x: e.evt.pageX - e.evt.currentTarget.offsetLeft,
-      y: e.evt.pageY - e.evt.currentTarget.offsetTop,
+      x: pos.x,
+      y: pos.y,
     });
   };
   const mouseUp = () => {
@@ -58,8 +65,8 @@ export const Canvas = ({ outerDivRef }) => {
     if (!a) return;
     setRect({
       ...rect,
-      width: e.evt.pageX - e.evt.currentTarget.offsetLeft - rect.x,
-      height: e.evt.pageY - e.evt.currentTarget.offsetTop - rect.y,
+      width: rect.x - e.evt.pageX - e.evt.currentTarget.offsetLeft,
+      height: rect.y - e.evt.pageY - e.evt.currentTarget.offsetTop,
     });
   };
 
@@ -69,6 +76,44 @@ export const Canvas = ({ outerDivRef }) => {
       debugger;
     };
   }, [url]);
+
+  const handleWheel = (e) => {
+    e.evt.preventDefault();
+
+    const scaleBy = 1.2;
+    const stage = e.target.getStage();
+    const oldScale = stage.scaleX();
+    debugger;
+    const mousePointTo = {
+      x: stage.pointerPos.x / oldScale - stage.x() / oldScale,
+      y: stage.pointerPos.y / oldScale - stage.y() / oldScale,
+    };
+
+    const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+    setStageZoom({
+      stageScale: newScale,
+      stageX: -(mousePointTo.x - stage.pointerPos.x / newScale) * newScale,
+      stageY: -(mousePointTo.y - stage.pointerPos.y / newScale) * newScale,
+    });
+    stage.position({
+      stageX: -(mousePointTo.x - stage.pointerPos.x / newScale) * newScale,
+      stageY: -(mousePointTo.y - stage.pointerPos.y / newScale) * newScale,
+    });
+  };
+  function getRelativePointerPosition(node) {
+    debugger;
+    // the function will return pointer position relative to the passed node
+    var transform = node.target.getAbsoluteTransform().copy();
+    // to detect relative position we need to invert transform
+    transform.invert();
+
+    // get pointer (say mouse or touch) position
+    var pos = node.target.getStage().getPointerPosition();
+
+    // now we find relative point
+    return transform.point(pos);
+  }
   return (
     <Stage
       draggable={dragable}
@@ -80,9 +125,14 @@ export const Canvas = ({ outerDivRef }) => {
       onMouseDown={(e) => mouseDown(e)}
       onMouseUp={(e) => mouseUp(e)}
       onMouseMove={(e) => mouseMove(e)}
+      onWheel={(e) => handleWheel(e)}
+      scaleX={stageZoom.stageScale}
+      scaleY={stageZoom.stageScale}
+      x={stageZoom.stageX}
+      y={stageZoom.stageY}
     >
       <Layer>
-        <URLImage image={img} />
+        <URLImage image={img} stageZoom={stageZoom} />
         <Rect
           x={rect.x}
           y={rect.y}
