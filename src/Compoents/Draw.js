@@ -22,7 +22,6 @@ function Draw({ outerDivRef, Url }) {
   };
 
   const drop = (e) => {
-    debugger;
     e.stopPropagation();
     e.preventDefault();
     let imgs = e.dataTransfer.getData("URL").split("///");

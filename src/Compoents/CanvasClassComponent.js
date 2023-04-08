@@ -22,7 +22,6 @@ class Canvas extends react.Component {
     this.onload = this.onload.bind(this);
   }
   onload(imageObj, ctx) {
-    debugger;
     ctx.canvas.height = imageObj.height;
     ctx.canvas.width = imageObj.width;
     ctx.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);
@@ -30,7 +29,6 @@ class Canvas extends react.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.url !== this.props.url) {
-      debugger;
       let imageObj = new Image();
       let ctx = this.reference.current.getContext("2d");
       imageObj.src = this.props.url;
@@ -102,7 +100,6 @@ class Canvas extends react.Component {
     e.stopPropagation();
     e.preventDefault();
     if (this.state.drag) {
-      debugger;
       let ctx = this.reference.current.getContext("2d");
       this.setState({
         ...this.state,
@@ -144,7 +141,6 @@ class Canvas extends react.Component {
   };
 
   drawPrivous = () => {
-    debugger;
     ///console.log("contttttt", this.props.counter);
     // privousData.forEach(data=>)
     let a = this.reference.current.getContext("2d");

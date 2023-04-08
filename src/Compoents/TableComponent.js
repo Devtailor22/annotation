@@ -27,7 +27,6 @@ const TableComonent = ({ tableHeadCol_enum }) => {
   const [open, setOpen] = useState(false);
   const [useFor, setUseFor] = useState("Add");
   const ModelHandler = (edit) => {
-    debugger;
     setOpen(!open);
     setUseFor(edit ? "Edit" : "Add");
     !edit && setDataObject(ObjectOfData);
@@ -78,7 +77,6 @@ const TableComonent = ({ tableHeadCol_enum }) => {
     ModelHandler(true);
   };
   const DrawHandler = (src) => {
-    debugger;
     navigate("/Annotaion");
     dispatch(setUrl(src));
   };
