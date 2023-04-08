@@ -47,7 +47,6 @@ export const Canvas = ({ outerDivRef }) => {
   const [rect, setRect] = React.useState({ x: 0, y: 0, width: 0, height: 0 });
   const [stageZoom, setStageZoom] = React.useState({});
   const mouseDown = (e) => {
-    debugger;
     a = true;
     //let pos = e.target.getRelativePointerPosition();
     let pos = getRelativePointerPosition(e.target.getStage());
@@ -75,9 +74,7 @@ export const Canvas = ({ outerDivRef }) => {
 
   React.useEffect(() => {
     imageObj.src = url;
-    imageObj.onload = () => {
-      debugger;
-    };
+    imageObj.onload = () => {};
   }, [url]);
 
   function getRelativePointerPosition(node) {
@@ -90,12 +87,10 @@ export const Canvas = ({ outerDivRef }) => {
     const pos = node.getStage().getPointerPosition();
 
     // now we find relative point
-    debugger;
     return transform.point(pos);
   }
 
   function zoomStage(stage, scaleBy, event) {
-    debugger;
     const oldScale = stage.scaleX();
     var pointer = stage.getPointerPosition();
 

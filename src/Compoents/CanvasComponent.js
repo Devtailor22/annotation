@@ -23,7 +23,6 @@ export const Canvas = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    debugger;
     //ref.current.getctx("2d");
     setCanvas(reference.current);
     rect = outerDivRef.current.getBoundingClientRect();
@@ -113,7 +112,6 @@ export const Canvas = ({
   }
 
   function drawPrivous() {
-    debugger;
     console.log("contttttt", count);
     // privousData.forEach(data=>)
     let a = reference.current.getContext("2d");
